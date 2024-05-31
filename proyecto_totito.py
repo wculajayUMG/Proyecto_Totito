@@ -33,6 +33,48 @@ pantalla.fill(COLOR_FONDO)
 
 # Clases
 
+class PrintNames:
+    def __init__(self, nombres, ancho=700, alto=600):
+        self.nombres = nombres
+        self.ancho = ancho
+        self.alto = alto
+        self.titulo = "Nombres de Colaboradores del proyecto"
+
+        pygame.init()
+
+        self.ventana = pygame.display.set_mode((self.ancho, self.alto))
+        pygame.display.set_caption('Lista de Nombres')
+
+        self.fuente_titulo = pygame.font.SysFont('Arial', 40)
+        self.fuente_nombres = pygame.font.SysFont('Arial', 30)
+
+        self.color_fondo = (255, 255, 255)
+        self.color_texto = (0, 0, 0)
+
+    def ejecutar(self):
+        corriendo = True
+        while corriendo:
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    corriendo = False
+                if evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_ESCAPE:
+                        corriendo = False
+
+            self.ventana.fill(self.color_fondo)
+
+            texto_titulo = self.fuente_titulo.render(self.titulo, True, self.color_texto)
+            self.ventana.blit(texto_titulo, (self.ancho // 2 - texto_titulo.get_width() // 2, 20))
+
+            for i, nombre in enumerate(self.nombres):
+                texto_nombre = self.fuente_nombres.render(nombre, True, self.color_texto)
+                self.ventana.blit(texto_nombre, (50, 100 + i * 40))
+
+            pygame.display.flip()
+
+        pygame.quit()
+
+
 class Tablero:
     def __init__(self):
         self.casillas = np.zeros((FILAS, COLUMNAS))
@@ -240,6 +282,7 @@ class Juego:
                 self.arbol.edge(nuevo_estado, estado_futuro, label=movimiento)
 
 def main():
+    nombres = ['9490-22-1157 Josue Sebastian Mancilla González', '9490-22-958  Anthony Fabian Ramires Orellana', '9490-22-4974 Oscar José Cojulún Mendoza', '9490-22-3432 Willy Estuardo Culajay Asturias']
     juego = Juego()
     tablero = juego.tablero
     maquina = juego.maquina
@@ -262,6 +305,9 @@ def main():
                     maquina.nivel = 0
                 if evento.key == pygame.K_1:
                     maquina.nivel = 1
+                if evento.key == pygame.K_n:
+                    PrintNames(nombres).ejecutar()
+
 
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 pos = evento.pos
